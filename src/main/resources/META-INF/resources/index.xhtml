@@ -7,35 +7,37 @@
     <title>SIGTAREFAS</title>
 </h:head>
 <h:body>
-
+    <p:growl id="messages" showDetail="true" life="3000"/>
     <h:form>
         <p:panel header="Nova Tarefa">
             <h:panelGrid columns="2">
                 <p:outputLabel for="title" value="Título:"/>
-                <p:inputText id="title" value="#{taskController.task.title}" required="true"/>
+                <p:inputText id="title" value="#{taskMB.task.title}" required="true"/>
 
                 <p:outputLabel for="description" value="Descrição:"/>
-                <p:inputTextarea id="description" value="#{taskController.task.description}"/>
+                <p:inputTextarea id="description" value="#{taskMB.task.description}"/>
 
                 <p:outputLabel for="assignee" value="Responsável:"/>
-                <p:inputText id="assignee" value="#{taskController.task.assignee}"/>
+                <p:inputText id="assignee" value="#{taskMB.task.assignee}"/>
 
                 <p:outputLabel for="priority" value="Prioridade:"/>
-                <p:selectOneMenu id="priority" value="#{taskController.task.priority}">
-                    <f:selectItems value="#{TaskPriority.values()}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                <p:selectOneMenu id="priority" value="#{taskMB.task.priority}">
+                    <f:selectItems value="#{taskMB.task.priority.values()}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
                 </p:selectOneMenu>
 
                 <p:outputLabel for="date" value="Data:"/>
-                <p:calendar id="date" value="#{taskController.task.date}" showOn="button"/>
+                <p:calendar id="date" value="#{taskMB.task.date}" showOn="button"/>
 
-                <p:commandButton value="Salvar" action="#{taskController.save}" update="@form"/>
+                <p:commandButton value="Salvar" actionListener="#{taskMB.save()}" update="@form messages">
+                    <p:ajax oncomplete="PF('messages').renderMessage({summary:'Sucesso', detail:'Nova tarefa salva!', severity:'info'})"/>
+                </p:commandButton>
             </h:panelGrid>
         </p:panel>
     </h:form>
 
     <h:form>
         <p:panel header="Lista de Tarefas">
-            <p:dataTable value="#{taskController.taskList}" var="task" emptyMessage="Nenhuma tarefa encontrada">
+            <p:dataTable value="#{taskMB.taskList}" var="task" emptyMessage="Nenhuma tarefa encontrada">
                 <p:column headerText="ID">
                     #{task.id}
                 </p:column>
@@ -54,8 +56,8 @@
                     </h:outputText>
                 </p:column>
                 <p:column headerText="Ações">
-                    <p:commandButton value="Excluir" action="#{taskController.delete(task)}" update="@form">
-                        <f:setPropertyActionListener target="#{taskController.task}" value="#{task}"/>
+                    <p:commandButton value="Excluir" action="#{taskMB.delete(task)}" update="@form">
+                        <f:setPropertyActionListener target="#{taskMB.task}" value="#{task}"/>
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
