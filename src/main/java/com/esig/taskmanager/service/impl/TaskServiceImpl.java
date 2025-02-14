@@ -4,9 +4,11 @@ import com.esig.taskmanager.model.entity.Task;
 import com.esig.taskmanager.repository.ITaskRepository;
 import com.esig.taskmanager.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TaskServiceImpl implements ITaskService {
 
     @Autowired

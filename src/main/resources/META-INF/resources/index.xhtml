@@ -1,19 +1,66 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:faces="jakarta.faces"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:f="jakarta.faces.core"
       xmlns:h="jakarta.faces.html"
-      xmlns:pt="jakarta.faces.passthrough"
-      xmlns:cc="jakarta.faces.composite"
-      xmlns:c="jakarta.tags.core"
-      xmlns:p="primefaces"
-      xmlns:fn="jakarta.tags.functions">
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
-    <title>Mi Proyecto JSF 3</title>
+    <title>SIGTAREFAS</title>
 </h:head>
 <h:body>
-    <p:button value="Click"/>
-    <h1>Hola, Mundo!</h1>
+
+    <h:form>
+        <p:panel header="Nova Tarefa">
+            <h:panelGrid columns="2">
+                <p:outputLabel for="title" value="Título:"/>
+                <p:inputText id="title" value="#{taskController.task.title}" required="true"/>
+
+                <p:outputLabel for="description" value="Descrição:"/>
+                <p:inputTextarea id="description" value="#{taskController.task.description}"/>
+
+                <p:outputLabel for="assignee" value="Responsável:"/>
+                <p:inputText id="assignee" value="#{taskController.task.assignee}"/>
+
+                <p:outputLabel for="priority" value="Prioridade:"/>
+                <p:selectOneMenu id="priority" value="#{taskController.task.priority}">
+                    <f:selectItems value="#{TaskPriority.values()}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel for="date" value="Data:"/>
+                <p:calendar id="date" value="#{taskController.task.date}" showOn="button"/>
+
+                <p:commandButton value="Salvar" action="#{taskController.save}" update="@form"/>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+
+    <h:form>
+        <p:panel header="Lista de Tarefas">
+            <p:dataTable value="#{taskController.taskList}" var="task" emptyMessage="Nenhuma tarefa encontrada">
+                <p:column headerText="ID">
+                    #{task.id}
+                </p:column>
+                <p:column headerText="Título">
+                    #{task.title}
+                </p:column>
+                <p:column headerText="Descrição">
+                    #{task.description}
+                </p:column>
+                <p:column headerText="Prioridade">
+                    #{task.priority}
+                </p:column>
+                <p:column headerText="Data">
+                    <h:outputText value="#{task.date}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Ações">
+                    <p:commandButton value="Excluir" action="#{taskController.delete(task)}" update="@form">
+                        <f:setPropertyActionListener target="#{taskController.task}" value="#{task}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+
 </h:body>
 </html>
