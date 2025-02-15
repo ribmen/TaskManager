@@ -48,4 +48,9 @@ public class TaskServiceImpl implements ITaskService {
         }
         return null;
     }
+
+    @Override
+    public List<Task> findTaskByFilters(Integer id, String title, String assignee, Boolean pending) {
+        return taskRepository.findByFilters(id, title, assignee, pending);
+    }
 }

@@ -39,6 +39,39 @@
 
     <p:divider/>
 
+    <h:form id="searchForm" style="width: 90vw; margin-top: 1rem; margin-left: auto; margin-right: auto">
+        <p:panelGrid columns="4" style="margin-bottom: 1rem;">
+            <p:outputLabel for="searchId" value="ID:"/>
+            <p:inputText id="searchId" value="#{taskMB.searchId}" />
+
+            <p:outputLabel for="searchTitle" value="Título:"/>
+            <p:inputText id="searchTitle" value="#{taskMB.searchTitle}" />
+
+            <p:outputLabel for="searchAssignee" value="Responsável:"/>
+            <p:selectOneMenu id="searchAssignee" value="#{taskMB.searchAssignee}">
+                <f:selectItem itemLabel="--Selecionar--" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{taskMB.assignees}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+            </p:selectOneMenu>
+
+            <p:outputLabel for="searchPending" value="Situação:"/>
+            <p:selectOneMenu id="searchPending" value="#{taskMB.searchPending}">
+                <f:selectItem itemLabel="Todas" itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItem itemLabel="Em andamento" itemValue="true"/>
+                <f:selectItem itemLabel="Concluída" itemValue="false"/>
+            </p:selectOneMenu>
+        </p:panelGrid>
+
+        <p:commandButton value="Buscar" action="#{taskMB.searchTasks()}" update="searchResults" styleClass="ui-button-primary"/>
+    </h:form>
+
+    <p:dataTable id="searchResults" value="#{taskMB.searchResults}" var="task" rendered="#{not empty taskMB.searchResults}"
+                 style="width: 90vw">
+        <p:column headerText="ID">#{task.id}</p:column>
+        <p:column headerText="Título">#{task.title}</p:column>
+        <p:column headerText="Responsável">#{task.assignee}</p:column>
+        <p:column headerText="Situação">#{task.pending ? 'Em andamento' : 'Concluída'}</p:column>
+    </p:dataTable>
+
 
     <h:form style="width: 90vw; margin-top: 1rem; margin-left: auto; margin-right: auto">
         <p:panel header="Listagem de Tarefas" >

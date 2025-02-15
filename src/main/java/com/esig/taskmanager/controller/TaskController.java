@@ -37,6 +37,26 @@ public class TaskController implements Serializable {
     @Getter
     private List<Task> taskList;
 
+    @Getter
+    @Setter
+    private Integer searchId;
+
+    @Getter
+    @Setter
+    private String searchTitle;
+
+    @Getter
+    @Setter
+    private String searchAssignee;
+
+    @Getter
+    @Setter
+    private Boolean searchPending; // true = pendente, false = concluída
+
+    @Getter
+    private List<Task> searchResults;
+
+
     public List<TaskPriority> getPriorities() {
         return Arrays.asList(TaskPriority.listPriorities());
     }
@@ -97,4 +117,21 @@ public class TaskController implements Serializable {
         }
 
     }
+
+    // parte da busca
+
+    public void searchTasks() {
+        logger.info("Realizando busca com filtros - ID: {}, Título: '{}', Responsável: '{}', Situação: {}",
+                searchId, searchTitle, searchAssignee, searchPending);
+
+        searchResults = taskService.findTaskByFilters(searchId, searchTitle, searchAssignee, searchPending);
+
+        if (searchResults.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", "Nenhuma tarefa encontrada."));
+        }
+    }
+
+
+
 }
