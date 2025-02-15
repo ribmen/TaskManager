@@ -30,7 +30,7 @@ public class Task implements Serializable {
     private TaskPriority priority;
     @Column(name = "date")
     private Date date;
-
-
+    @Column(name = "situation")
+    private Boolean pending = true;
 
 }

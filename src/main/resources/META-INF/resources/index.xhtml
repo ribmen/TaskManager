@@ -7,58 +7,121 @@
     <title>SIGTAREFAS</title>
 </h:head>
 <h:body>
-    <p:growl id="messages" showDetail="true" life="3000"/>
-    <h:form>
+    <h:form style="width: 90vw; margin-top: 1rem; margin-left: auto; margin-right: auto">
         <p:panel header="Nova Tarefa">
             <h:panelGrid columns="2">
                 <p:outputLabel for="title" value="Título:"/>
                 <p:inputText id="title" value="#{taskMB.task.title}" required="true"/>
 
+                <p:outputLabel for="assignee" value="Responsável:"/>
+                <p:selectOneMenu id="assignee" value="#{taskMB.task.assignee}">
+                    <f:selectItem itemLabel="--Selecionar--" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{taskMB.assignees}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                </p:selectOneMenu>
+
                 <p:outputLabel for="description" value="Descrição:"/>
                 <p:inputTextarea id="description" value="#{taskMB.task.description}"/>
 
-                <p:outputLabel for="assignee" value="Responsável:"/>
-                <p:inputText id="assignee" value="#{taskMB.task.assignee}"/>
-
                 <p:outputLabel for="priority" value="Prioridade:"/>
                 <p:selectOneMenu id="priority" value="#{taskMB.task.priority}">
-                    <f:selectItems value="#{taskMB.task.priority.values()}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                    <f:selectItem itemLabel="--Selecionar--" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{taskMB.priorities}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
                 </p:selectOneMenu>
 
-                <p:outputLabel for="date" value="Data:"/>
+                <p:outputLabel for="date" value="Prazo:"/>
                 <p:calendar id="date" value="#{taskMB.task.date}" showOn="button"/>
 
-                <p:commandButton value="Salvar" actionListener="#{taskMB.save()}" update="@form messages">
-                    <p:ajax oncomplete="PF('messages').renderMessage({summary:'Sucesso', detail:'Nova tarefa salva!', severity:'info'})"/>
-                </p:commandButton>
+                <p:growl widgetVar="growlWV" id="messages" showDetail="true" life="8000"/>
+                <p:commandButton value="Salvar" actionListener="#{taskMB.save()}" update="@form messages"/>
             </h:panelGrid>
         </p:panel>
     </h:form>
 
-    <h:form>
-        <p:panel header="Lista de Tarefas">
-            <p:dataTable value="#{taskMB.taskList}" var="task" emptyMessage="Nenhuma tarefa encontrada">
-                <p:column headerText="ID">
+    <p:divider/>
+
+
+    <h:form style="width: 90vw; margin-top: 1rem; margin-left: auto; margin-right: auto">
+        <p:panel header="Listagem de Tarefas" >
+            <p:dataTable value="#{taskMB.taskList}" reflow="true" var="task" emptyMessage="Nenhuma tarefa encontrada">
+                <p:column headerText="ID" style="width: 5%">
                     #{task.id}
                 </p:column>
-                <p:column headerText="Título">
+                <p:column headerText="Título" style="width: 10%">
                     #{task.title}
                 </p:column>
-                <p:column headerText="Descrição">
+                <p:column headerText="Responsável" style="width: 10%">
+                    #{task.assignee}
+                </p:column>
+                <p:column headerText="Descrição" style="width: 12%">
                     #{task.description}
                 </p:column>
-                <p:column headerText="Prioridade">
+                <p:column headerText="Prioridade" style="width: 8%">
                     #{task.priority}
                 </p:column>
-                <p:column headerText="Data">
+                <p:column headerText="Prazo" style="width: 8%">
                     <h:outputText value="#{task.date}">
                         <f:convertDateTime pattern="dd/MM/yyyy"/>
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Ações">
-                    <p:commandButton value="Excluir" action="#{taskMB.delete(task)}" update="@form">
-                        <f:setPropertyActionListener target="#{taskMB.task}" value="#{task}"/>
-                    </p:commandButton>
+                <p:column headerText="Ações" style="width: 18%">
+                    <h:panelGroup layout="block" style="display: flex; gap: 10px;">
+
+                        <p:commandButton value="Editar" actionListener="#{taskMB.setSelectedTask(task)}" update="@form" oncomplete="PF('editTaskDialog').show()"
+                                         styleClass="edit-button ui-button-success" process="@this">
+                            <f:setPropertyActionListener target="#{taskMB.task}" value="#{task}"/>
+                        </p:commandButton>
+
+                        <p:dialog header="Editar Tarefa" widgetVar="editTaskDialog" modal="true" responsive="true" >
+                            <h:panelGroup columns="2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 60vw;">
+
+                            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                                <p:outputLabel for="editTitle" value="Título:" style="width: 25%"/>
+                                <p:inputText id="editTitle" value="#{taskMB.task.title}" required="true" style="flex: 1"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                                <p:outputLabel for="editDescription" value="Descrição:" style="width: 25%"/>
+                                <p:inputTextarea id="editDescription" value="#{taskMB.task.description}" style="flex: 1"/>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                                <p:outputLabel for="editAssignee" value="Responsável:" style="width: 25%"/>
+                                <p:selectOneMenu id="editAssignee" value="#{taskMB.task.assignee}" style="flex: 1">
+                                    <f:selectItems value="#{taskMB.assignees}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                                <p:outputLabel for="editPriority" value="Prioridade:" style="width: 25%"/>
+                                <p:selectOneMenu id="editPriority" value="#{taskMB.task.priority}" style="flex: 1">
+                                    <f:selectItems value="#{taskMB.priorities}" var="p" itemLabel="#{p}" itemValue="#{p}"/>
+                                </p:selectOneMenu>
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                                <p:outputLabel for="editDate" value="Data:" style="width: 25%"/>
+                                <p:calendar id="editDate" value="#{taskMB.task.date}" pattern="dd/MM/yyyy" showOn="button" style="flex: 1"/>
+                            </h:panelGroup>
+
+                            </h:panelGroup>
+                            <p:outputPanel style="margin-top: 1rem; margin-bottom: 1rem; display: flex; gap: 10px">
+                                <p:commandButton value="Salvar" actionListener="#{taskMB.edit()}" update="@form"
+                                                 oncomplete="PF('editTaskDialog').hide()"/>
+                                <p:commandButton value="Cancelar" onclick="PF('editTaskDialog').hide()" styleClass="ui-button-secondary"/>
+                            </p:outputPanel>
+
+                        </p:dialog>
+
+                        <p:commandButton value="Concluir" action="#{taskMB.concludeTask(task)}" update="@form">
+                            <f:setPropertyActionListener target="#{taskMB.task}" value="#{task}"/>
+                        </p:commandButton>
+
+                        <p:commandButton value="Excluir" action="#{taskMB.delete(task)}" update="@form"
+                                         icon="pi pi-trash"
+                                         styleClass="ui-button-danger">
+                            <f:setPropertyActionListener target="#{taskMB.task}" value="#{task}"/>
+                        </p:commandButton>
+                    </h:panelGroup>
                 </p:column>
             </p:dataTable>
         </p:panel>
