@@ -12,10 +12,15 @@ import java.util.List;
 @Service
 public class TaskServiceImpl implements ITaskService {
 
-    @Autowired
-    private ITaskRepository taskRepository;
+    public TaskServiceImpl(ITaskRepository taskRepository, TaskRepositoryQuery taskRepositoryQuery) {
+        this.taskRepository = taskRepository;
+        this.taskRepositoryQuery = taskRepositoryQuery;
+    }
 
-    private TaskRepositoryQuery taskRepositoryQuery;
+    private final ITaskRepository taskRepository;
+
+
+    private final TaskRepositoryQuery taskRepositoryQuery;
 
     @Override
     public Task saveTask(Task task) {

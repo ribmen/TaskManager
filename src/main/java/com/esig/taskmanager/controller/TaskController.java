@@ -12,11 +12,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -24,12 +26,19 @@ import java.util.List;
 @Named
 @Component(value = "taskMB")
 @ViewScoped
+@Slf4j
 public class TaskController implements Serializable {
 
-    @Inject
-    private ITaskService taskService;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+
+    @Inject
+    public TaskController(ITaskService taskService){
+        this.taskService = taskService;
+    }
+
+    private final ITaskService taskService;
 
     @Getter
     @Setter
@@ -87,13 +96,13 @@ public class TaskController implements Serializable {
 
     public void save() {
         try {
-            logger.info("Salvando nova tarefa: " + task);
+            log.info("Salvando nova tarefa: " + task);
             taskService.saveTask(task);
             task = new Task();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tarefa adicionada com sucesso!"));
             loadTasks();
         } catch (Exception e) {
-            logger.error("Erro ao salvar tarefa", e);
+            log.error("Erro ao salvar tarefa", e);
         }
     }
 
@@ -109,12 +118,12 @@ public class TaskController implements Serializable {
 
     public void delete(Task task) {
         try {
-            logger.info("Deletar tarefa");
+            log.info("Deletar tarefa");
             taskService.deleteTask(task);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tarefa excluída com sucesso."));
             loadTasks();
         } catch (Exception e) {
-            logger.error("Erro ao deletar tarefa", e);
+            log.error("Erro ao deletar tarefa", e);
         }
 
     }
@@ -122,11 +131,10 @@ public class TaskController implements Serializable {
     // parte da busca
 
     public void searchTasks() {
-        logger.info("Realizando busca com filtros - ID: {}, Título: '{}', Responsável: '{}', Situação: {}",
+        log.info("Realizando busca com filtros - Título: '{}', Responsável: '{}', Situação: {}",
                 searchTitle, searchAssignee, searchPending);
-        logger.info("Tarefas encontradas: {}", searchResults.size());
-
         searchResults = taskService.findTaskByFilters(searchTitle, searchAssignee , searchPending);
+        log.info("Tarefas encontradas: {}", searchResults.size());
 
         if (searchResults.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,

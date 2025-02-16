@@ -22,14 +22,21 @@ public class Task implements Serializable {
 
     @Column(name = "title")
     private String title;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "assignee")
-    private String assignee;
+    @Enumerated(EnumType.STRING)
+    private Assignees assignee;
+
     @Column(name = "priority")
+    @Enumerated(EnumType.STRING)
     private TaskPriority priority;
+
     @Column(name = "date")
     private Date date;
+
     @Column(name = "situation")
     private Boolean pending = true;
 
