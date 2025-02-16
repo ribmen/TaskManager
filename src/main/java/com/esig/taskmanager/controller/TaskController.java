@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
@@ -80,6 +81,10 @@ public class TaskController implements Serializable {
         loadTasks();
     }
 
+    public void loadTasks() {
+        taskList = taskService.listTasks();
+    }
+
     public void save() {
         try {
             logger.info("Salvando nova tarefa: " + task);
@@ -87,15 +92,11 @@ public class TaskController implements Serializable {
             task = new Task();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Tarefa adicionada com sucesso!"));
             loadTasks();
-            logger.info("Tarefa salva com sucesso!");
         } catch (Exception e) {
             logger.error("Erro ao salvar tarefa", e);
         }
     }
 
-    public void loadTasks() {
-        taskList = taskService.listTasks();
-    }
 
     public void edit() {
         if (task.getId() != null ) {
@@ -122,9 +123,10 @@ public class TaskController implements Serializable {
 
     public void searchTasks() {
         logger.info("Realizando busca com filtros - ID: {}, Título: '{}', Responsável: '{}', Situação: {}",
-                searchId, searchTitle, searchAssignee, searchPending);
+                searchTitle, searchAssignee, searchPending);
+        logger.info("Tarefas encontradas: {}", searchResults.size());
 
-        searchResults = taskService.findTaskByFilters(searchId, searchTitle, searchAssignee, searchPending);
+        searchResults = taskService.findTaskByFilters(searchTitle, searchAssignee, searchPending);
 
         if (searchResults.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,

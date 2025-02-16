@@ -11,5 +11,5 @@ public interface ITaskService {
     public List<Task> listTasks();
     public Task updateTask(Integer id, Task task);
     public void deleteTask(Task task);
-    public List<Task> findTaskByFilters(Integer id, String title, String assignee, Boolean pending);
+    public List<Task> findTaskByFilters(String title, String assignee, Boolean pending);
 }
