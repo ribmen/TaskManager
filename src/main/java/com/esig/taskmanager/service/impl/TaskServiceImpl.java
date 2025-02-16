@@ -2,6 +2,7 @@ package com.esig.taskmanager.service.impl;
 
 import com.esig.taskmanager.model.entity.Task;
 import com.esig.taskmanager.repository.ITaskRepository;
+import com.esig.taskmanager.repository.TaskRepositoryQuery;
 import com.esig.taskmanager.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private ITaskRepository taskRepository;
 
+    private TaskRepositoryQuery taskRepositoryQuery;
+
     @Override
     public Task saveTask(Task task) {
         return taskRepository.save(task);
@@ -22,6 +25,7 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     public Task findTaskById(Integer id) {
         return taskRepository.findById(id).orElse(null);
+
     }
 
     @Override
@@ -51,6 +55,6 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     public List<Task> findTaskByFilters(String title, String assignee, Boolean pending) {
-        return taskRepository.findByFilters(title, assignee, pending);
+        return taskRepositoryQuery.queryByFields(title, assignee, pending);
     }
 }

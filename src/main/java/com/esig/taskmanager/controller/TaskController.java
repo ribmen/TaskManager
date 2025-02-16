@@ -126,7 +126,7 @@ public class TaskController implements Serializable {
                 searchTitle, searchAssignee, searchPending);
         logger.info("Tarefas encontradas: {}", searchResults.size());
 
-        searchResults = taskService.findTaskByFilters(searchTitle, searchAssignee, searchPending);
+        searchResults = taskService.findTaskByFilters(searchTitle, searchAssignee , searchPending);
 
         if (searchResults.isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
