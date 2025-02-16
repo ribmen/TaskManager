@@ -57,7 +57,7 @@ public class TaskController implements Serializable {
 
     @Getter
     @Setter
-    private String searchAssignee;
+    private Assignees searchAssignee;
 
     @Getter
     @Setter

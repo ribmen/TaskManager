@@ -17,3 +17,18 @@ services:
       options:
         max-file: "5"
         max-size: "10m"
+  task-manager:
+    container_name: task-manager
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/task_manager_db?createDatabaseIfNotExist=true
+    depends_on:
+      - postgres
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "10m"

@@ -1,5 +1,6 @@
 package com.esig.taskmanager.service.impl;
 
+import com.esig.taskmanager.model.entity.Assignees;
 import com.esig.taskmanager.model.entity.Task;
 import com.esig.taskmanager.repository.ITaskRepository;
 import com.esig.taskmanager.repository.TaskRepositoryQuery;
@@ -59,7 +60,7 @@ public class TaskServiceImpl implements ITaskService {
     }
 
     @Override
-    public List<Task> findTaskByFilters(String title, String assignee, Boolean pending) {
+    public List<Task> findTaskByFilters(String title, Assignees assignee, Boolean pending) {
         return taskRepositoryQuery.queryByFields(title, assignee, pending);
     }
 }

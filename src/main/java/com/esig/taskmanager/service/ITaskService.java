@@ -1,5 +1,6 @@
 package com.esig.taskmanager.service;
 
+import com.esig.taskmanager.model.entity.Assignees;
 import com.esig.taskmanager.model.entity.Task;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface ITaskService {
     public List<Task> listTasks();
     public Task updateTask(Integer id, Task task);
     public void deleteTask(Task task);
-    public List<Task> findTaskByFilters(String title, String assignee, Boolean pending);
+    public List<Task> findTaskByFilters(String title, Assignees assignee, Boolean pending);
 }
