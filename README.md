@@ -16,18 +16,17 @@ O sistema permite criar, listar, filtrar, editar e excluir tarefas, seguindo a a
 ### Execução do projeto
 1. Clonar o repositório:
    A partir do comando a seguir:
-  git clone https://github.com/seu-usuario/seu-repositorio.git
-  cd seu-repositorio
-2. Configurar o banco de dados PostgreSQL:
-   Criar um banco chamado task_manager_db
-   Configurar o *application.properties* com as credenciais do projeto:
 
-      spring.datasource.url=jdbc:postgresql://localhost:5432/taskmanager
-      spring.datasource.username=usuario
-      spring.datasource.password=sua_senha
+  git clone https://github.com/ribmen/TaskManager.git
+  cd TaskManager
 
-3. Executar o projeto
-4. Acessá-lo em localhost:8080
+
+2. Para executar o projeto, tendo o docker compose funcionando, execute:
+
+docker compose up
+
+
+3. E acesse: http://localhost:8080/index.xhtml
 
 ### Agradecimentos
 À ESIG Software pela maravilhosa oportunidade.
